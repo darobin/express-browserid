@@ -4,7 +4,6 @@
 ,   "version":      "0.0.1"
 ,   "author":       "Robin Berjon <robin@berjon.com>"
 ,   "dependencies": {
-        "shred":    "= 0.6.4"
     }
 ,   "devDependencies": {
         "mocha":    "*"
