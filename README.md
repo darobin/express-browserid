@@ -82,23 +82,55 @@ the ones that make sense to them.
 
 ## Interface (Client)
 
-XXX
-    attr:
-        data-auto
-        data-debug
-        data-verifier
-        data-selector
-        data-csrf
-        data-audience
-    events (on window):
-        login-attempt
-        login-response
-        received-assertion
-        login-error
-            no verify data
-            verify error
-            browserid error
-        login-success
+The client-side helper script can work out of the box with no configuration whatsoever, assuming you adhere to some
+basic conventions: change none of the server-side routes, and use `#browserid-login` as the ID of the element on
+which users click to initiate login.
+
+If you need specific behaviour, you'll have to using the configuration attributes. These are placed on the script
+element itself, and comprise:
+
+* data-auto. By default, once the login is successful, the page is simply reloaded. The assumption there is that your
+  server-side code will want to regenerate the page based on the newly established user identity. But that's not always
+  the case, for instance you may have written a web application in which the client always gets the same code, but needs
+  to authenticate to access specific APIs. In that case you can disable the reload behaviour by setting `data-auto`
+  to `false`.
+* data-debug. Set this to `true` to get extra information dumped to the `console`.
+* data-verifier. The URL of the verifier service you want to use. Note that this is probably on your server unless you
+  are confident you can work with cross-domain requests.
+* data-selector. A jQuery selector that picks the element(s) on which the user can click to activate the BrowserID
+  sign-in process. Defaults to `#browserid-login`.
+* data-csrf. If your server has CSRF protection enabled (which it should) then set your CSRF token here. The simplest
+  way is to use [the `express-csrf-plug` module](https://github.com/darobin/express-csrf) (shameless plug) for this
+  as it will both enable CSRF and make a `csrf` variable available in your views which you can assign to this attribute.
+* data-audience. The BrowserID audience you wish to authenticate for. This will default to a guess made based on the
+  current page's location (which I think should generally be correct — but don't just take my word for it, try it!).
+
+As the script progresses through the various phases of the sign-in, it dispatches events on the `window` object. You can
+listen to them using `$(window).on("event-name", function (...) { ... })`. You don't have to listen to any of these,
+but it is recommended that you listen for `login-error`. The reason for this is that the default behaviour for errors is
+to do nothing, which isn't entirely user-friendly. If you've set `data-auto` to `false`, you probably want to listen for
+`login-success` as well since you'll likely want to do something at that moment. The other events are mostly either for
+debugging, or for displaying progress to the user if you so desire.
+
+All events receive an event object as their first parameter, as always with jQuery. When additional parameters 
+are discussed below, they are passed *after* that event object.
+
+The following events are dispatched:
+
+* login-attempt. The user has clicked on the piece of UI that starts the sign-in process. The BrowserID dialog
+  should be showing up about now.
+* login-response. The BrowserID service has replied. This does not indicate that the reply was successful. If
+  we received an assertion back from the service, it is passed to the handler.
+* received-assertion. The `login-response` above was indeed successful and an assertion was received. It is passed
+  to the handler.
+* login-error. There was an error at some stage. The handler gets a string indicating the error type, and a 
+  if applicable additional data that was received and which can be used for debugging purposes. The possible error
+  types are: `no verify data` indicates that the verification service failed so that the assertion was probably
+  invalid (or something is seriously amiss); `verify error` indicates that there was a verification error, in
+  which case the reason is given in the `reason` attribute of the additional data parameter; `browserid error`
+  means that there was a problem contacting the BrowserID service (e.g. you're offline).
+* login-success. The login was successful. The handler receives an additional data object that at least has
+  an `email` attribute featuring the login email.
 
 ## License 
 
