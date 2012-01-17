@@ -37,7 +37,7 @@ own rather than all of them at once. Details below.
 Include the following script anywhere after having included jQuery and 
 https://browserid.org/include.js.
 
-    &lt;script src="/browserid/js/browserid-helper.js" data-debug="true" data-csrf="deadbeef">&lt;/script>
+    <script src="/browserid/js/browserid-helper.js" data-debug="true" data-csrf="deadbeef"></script>
 
 The path to the script can be configured on the server side (or if you prefer, you can load it from your
 own public directory — but you don't have to). All the data-* attributes that configure its behaviour are 
