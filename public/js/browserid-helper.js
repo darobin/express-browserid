@@ -12,21 +12,23 @@
         var scheme = location.protocol
         ,   audience = scheme + "//" + location.hostname
         ;
-        if ("http:" === scheme && "80" != location.port) audience += ":" + location.port;
-        else if ("https:" === scheme && "443" != location.port) audience += ":" + location.port;
+        if ("http:" === scheme && location.port && "80" != location.port) audience += ":" + location.port;
+        else if ("https:" === scheme && location.port && "443" != location.port) audience += ":" + location.port;
         return audience;
     }
     $("script").each(function () {
-        $scr = $(this);
+        var $scr = $(this);
         if (/js\/browserid-helper\.js(?:\?.+)?$/.test($scr.attr("src"))) {
             if ("false" === $scr.attr("data-auto")) options.auto = false;
             if ("true" === $scr.attr("data-debug")) options.debug = true;
             options.verifier = $scr.attr("data-verifier") || options.verifier;
             options.selector = $scr.attr("data-selector") || options.selector;
+            options.csrf = $scr.attr("data-csrf") || "";
             options.audience = $scr.attr("data-audience") || audience();
             return false;
         }
     });
+    if (options.debug) console.log("[BrowserID] Options: ", options);
     var $win = $(window);
     $(options.selector).click(function () {
         $win.trigger("login-attempt");
@@ -34,9 +36,11 @@
             $win.trigger("login-response", assertion);
             if (assertion) {
                 $win.trigger("received-assertion", assertion);
+                var data = { audience: options.audience, assertion: assertion };
+                if (options.csrf) data._csrf = options.csrf;
                 $.post(
                         options.verifier
-                    ,   { audience: options.audience, assertion: assertion }
+                    ,   data
                     ,   function (data) {
                             if (!data) $win.trigger("login-error", "no verify data");
                             if ("okay" === data.status) {
