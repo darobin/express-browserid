@@ -18,7 +18,7 @@
     }
     $("script").each(function () {
         var $scr = $(this);
-        if (/js\/browserid-helper\.js(?:\?.+)?$/.test($scr.attr("src"))) {
+        if (/browserid-helper\.js(?:\?.+)?$/.test($scr.attr("src"))) {
             if ("false" === $scr.attr("data-auto")) options.auto = false;
             if ("true" === $scr.attr("data-debug")) options.debug = true;
             options.verifier = $scr.attr("data-verifier") || options.verifier;
