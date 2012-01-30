@@ -84,6 +84,7 @@ the ones that make sense to them.
 * audience. The scheme + host + optional port (e.g. `http://berjon.com` or `https://github.com:8001`) for which
   this authentication is being made. Only override this if you know what you're doing, the client side is a better
   place to configure this setting (if configured there, it will be used here).
+* sessionKey. The name of the key used to store the email in the session. Defaults to `email`.
 
 ## Interface (Client)
 
