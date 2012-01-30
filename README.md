@@ -32,6 +32,11 @@ Somewhere as part of your routes (i.e. after configuration):
 This method supports options, and there are other methods that will plug individual routes on their
 own rather than all of them at once. Details below.
 
+Note that the library uses POST, so Express must be configured prior to initialization with a body
+parser:
+
+    app.use(express.bodyParser());
+
 ## Usage (Client)
 
 Include the following script anywhere after having included jQuery and 
