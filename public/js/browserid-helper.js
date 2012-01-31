@@ -1,7 +1,8 @@
 
-(function ($) {
+jQuery(document).ready(function() {
     "use strict";
 
+    var $ = jQuery;
     var options = {
         auto:       true
     ,   debug:      false
@@ -79,4 +80,4 @@
             location.reload();
         });
     }
-})(jQuery);
+});
