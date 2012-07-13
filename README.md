@@ -1,7 +1,7 @@
 
 ## Overview
 
-This is a set of helper code that intends to make using [BrowserID](https://browserid.org/) easier
+This is a set of helper code that intends to make using [BrowserID](https://login.persona.org/) easier
 from inside an Express application. I slapped it together because as I started integrating BrowserID
 support into one of my project, I realised that while there were great pieces of code as well as
 documentation and examples, most of them using NodeJS already, a decent amount of assembly was
@@ -39,8 +39,8 @@ parser:
 
 ## Usage (Client)
 
-Include the following script anywhere after having included jQuery and 
-https://browserid.org/include.js.
+Include the following script anywhere after having included jQuery and
+https://login.persona.org/include.js.
 
     <script src="/browserid/js/browserid-helper.js" data-debug="true" data-csrf="deadbeef"></script>
 
