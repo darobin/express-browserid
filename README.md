@@ -1,3 +1,4 @@
+[![build status](https://secure.travis-ci.org/darobin/express-browserid.png)](http://travis-ci.org/darobin/express-browserid)
 
 ## Overview
 
